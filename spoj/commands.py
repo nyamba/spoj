@@ -1,6 +1,10 @@
-import requests, getpass, cookielib
+# -*- coding: utf-8 -*-
+import requests, getpass, cookielib, argparse
+from BeautifulSoup import BeautifulSoup
 from requests.cookies import RequestsCookieJar
 from . import settings
+from .settings import _url
+from .utils import unescape as _
 
 
 class Command(object):
@@ -8,6 +12,7 @@ class Command(object):
     def __init__(self, name, desc):
         self.name = name
         self.desc = desc
+        self._session = None
 
     def save_cookies(self):
         mcj = cookielib.MozillaCookieJar(settings.COOKIE_FILE_NAME)
@@ -45,6 +50,9 @@ class Command(object):
         except:
             return False
 
+    def auth_if(self):
+        if not self.is_authenticated():
+            self.authenticate()
 
     def __getattribute__(self, name):
         if name == 'requests':
@@ -58,11 +66,13 @@ class Command(object):
     def authenticate(self):
         loop = True
         print 'Authenticating user for ' + settings.SPOJ_URL
-        name = None
+
+        self.requests.cookies.clear()
 
         while loop:
+            name = settings.user_name
             if name is None:
-                if settings.username:
+                if settings.user_name:
                     name = settings.user_name
                     print 'loaded user name from config, [%s]' % name
                 else:
@@ -75,14 +85,13 @@ class Command(object):
 
             r = self.post(settings.LOGIN_URL, data=payload)
             if self.is_authenticated():
-                print 'Welcome %s to %s!' % (name, settings.SPOJ_URL)
+                print 'Welcome %s to %s' % (name, settings.SPOJ_URL)
                 loop = False
             else:
                 print 'incorrect user name or password! Try again.'
-                name = settings.user_name
 
-    def get(self, url, data=None, **kwargs):
-        return self.requests.get(url, data, **kwargs)
+    def get(self, url, **kwargs):
+        return self.requests.get(url, **kwargs)
 
     def post(self, url, data=None, **kwargs):
         return self.requests.post(url, data, **kwargs)
@@ -110,7 +119,7 @@ class Authenticate(Command):
         self.authenticate()
 
     def add_arguments(self, parser):
-        parser.add_argument('user_name')
+        parser.add_argument('user_name', nargs='?')
 
 
 class UserStatus(Command):
@@ -121,7 +130,25 @@ class UserStatus(Command):
                 )
 
     def doing(self, args):
-        print args.user_name
+        if args.user_name:
+            path = 'users/' + args.user_name
+        else:
+            path = 'myaccount'
+            self.auth_if()
+
+        r = self.get(_url(path))
+        soup = BeautifulSoup(r.text)
+        title = _(soup.find('h3').text)
+        solved_list = filter(None, [a.text for a in
+            soup.findAll('table')[4].findAll('a')])
+        unsolved_list = filter(None, [a.text for a in
+            soup.findAll('table')[5].findAll('a')])
+
+        print '%s\n' % title
+        print '%d бодлого бүрэн бодсон:' % len(solved_list)
+        print ', '.join(solved_list)
+        print '%d бодлого дутуу бодсон:' % len(unsolved_list)
+        print ', '.join(unsolved_list)
 
     def add_arguments(self, parser):
-        parser.add_argument('user_name')
+        parser.add_argument('user_name', nargs='?')

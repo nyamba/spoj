@@ -10,3 +10,6 @@ COOKIE_FILE_NAME = os.path.expanduser('~/.spoj_cookie')
 user_name = None
 #cookie jar
 cj = None
+
+def _url(path):
+    return MN_SPOJ_URL + path + '/'
