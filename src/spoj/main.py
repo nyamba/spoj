@@ -41,8 +41,12 @@ def _getOptionsParser():
     return parser
 
 
-if __name__ == '__main__':
+def runner():
     parseConfig()
     parser = _getOptionsParser()
     args = parser.parse_args()
     args.func(args)
+
+
+if __name__ == '__main__':
+    runner()
