@@ -24,7 +24,7 @@ setup(
     packages=['spoj'],
     include_package_data=True,
     zip_safe=False,
-    long_description=open("README").read(),
+    long_description=open("README.md").read(),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
