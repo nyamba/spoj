@@ -7,9 +7,9 @@ from . import settings
 def parseConfig():
     cfg = ConfigParser.ConfigParser()
     cfg.read([settings.CONFIG_FILE_NAME])
-    if cfg.has_option('user', 'name'):
-        logging.info('not defined user name')
-        settings.username = cfg.get('user', 'name')
+    for (k, v) in cfg.items('user'):
+        logging.info('loaded config: %s=%s' % (k, v))
+        setattr(settings, k, v)
 
     try:
         cj = cookielib.MozillaCookieJar(settings.COOKIE_FILE_NAME)

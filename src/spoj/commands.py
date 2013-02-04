@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-import requests, getpass, cookielib, argparse
+import requests, getpass, cookielib, argparse, pydoc
 from BeautifulSoup import BeautifulSoup
+from prettytable import PrettyTable
 from requests.cookies import RequestsCookieJar
 from . import settings
 from .settings import _url
-from .utils import unescape as _
+from .utils import unescape as _, text_table
 
 
 class Command(object):
@@ -16,7 +17,7 @@ class Command(object):
 
     def save_cookies(self):
         mcj = cookielib.MozillaCookieJar(settings.COOKIE_FILE_NAME)
-        [mcj.set_cookie(c) for c in self._session.cookies]
+        [mcj.set_cookie(c) for c in self.getHTTPClient().cookies]
         mcj.save()
 
     def do(self, args):
@@ -152,3 +153,46 @@ class UserStatus(Command):
 
     def add_arguments(self, parser):
         parser.add_argument('user_name', nargs='?')
+
+
+class ProblemList(Command):
+    def __init__(self):
+        super(ProblemList, self).__init__('list',
+                'list all problems on %s' % settings.ROOM_URL())
+
+    def doing(self, args):
+        arguments = []
+        if args.sort:
+            arguments.append('sort=%d' % args.sort)
+        if args.page:
+            arguments.append('page=%d' % args.page)
+
+        url = _url('problems/main') + ','.join(arguments)
+
+        r = self.get(url)
+        soup = BeautifulSoup(r.text)
+        t = PrettyTable(['Solution id(5)', 'Problem name(1)',
+            'Problem id(1)', 'Candidates(6)', 'Success(7)'])
+        t.align["Problem name(1)"] = 'l'
+        t.padding_with = 1
+
+        table = soup.find('table',{'class': 'problems'})
+        t = text_table(table, t, 1)
+        pydoc.pager(t.get_string().encode('utf-8'))
+
+    def add_arguments(self, parser):
+        choices, cc = [], [1, 2, 5, 6, 7]
+        for c in cc:
+            choices.append(c)
+            choices.append(-c)
+        parser.add_argument('--page', type=int, nargs='?',
+                help='page number of problem list page')
+        parser.add_argument('--sort', type=int, choices=choices, nargs='?',
+                help='''column number which will be sorted, if it is positive,
+                ascending order else descending, available options:
+                    1 - problem id,
+                    2 - problem name,
+                    5 - solution id,
+                    6 - users count who solved it,
+                    7 - percentage of valid solutions
+                ''')
