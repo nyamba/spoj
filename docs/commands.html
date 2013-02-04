@@ -1,0 +1,45 @@
+<!DOCTYPE html>  <html> <head>   <title>commands.py</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="__init__.html">                 __init__.py               </a>                                           <a class="source" href="api.html">                 api.py               </a>                                           <a class="source" href="commands.html">                 commands.py               </a>                                           <a class="source" href="runner.html">                 runner.py               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               commands.py             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">api</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p><code>login</code> command.</p>
+
+<pre><code>&gt; spoj login
+Username: username
+Password: ********
+</code></pre>
+
+<ul>
+<li>clear cookies</li>
+<li>post request to login page (cookie automatically saved)</li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
+    <span class="n">api</span><span class="o">.</span><span class="n">clear_cookies</span><span class="p">()</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">autologin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">submit</span><span class="o">=</span><span class="s">&quot;Log in&quot;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="s">&quot;login_user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="s">&quot;username&quot;</span><span class="p">,</span> <span class="s">&quot;Username: &quot;</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s">&quot;password&quot;</span><span class="p">]</span>   <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="s">&quot;password&quot;</span><span class="p">,</span> <span class="s">&quot;Password: &quot;</span><span class="p">)</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">LOGIN_URL</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s">&quot;autologin_login&quot;</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">cookies</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">print</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">Login unsuccessful!</span><span class="se">\n</span><span class="s">Username or password invalid!&quot;</span>
+
+    <span class="k">print</span> <span class="s">&quot;Welcome!&quot;</span>
+
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">@login_required</span>
+<span class="sd">def problem():</span>
+<span class="sd">    pass</span>
+
+
+<span class="sd">@login_required</span>
+<span class="sd">def submit():</span>
+<span class="sd">    pass</span>
+
+
+<span class="sd">`logout` command</span>
+<span class="sd">def logout():</span>
+
+<span class="sd">#DIVIDER</span>
+<span class="sd">    pass</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+</pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>get request to http://www.spoj.com/logout</p>             </td>             <td class="code">               <div class="highlight"><pre>undefined</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
