@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 
 name = 'spoj'
-version = '0.0.6'
+version = '0.0.8'
 
 
 def read(fname):
@@ -33,6 +33,7 @@ setup(
     ],
     install_requires=[
         'setuptools',
+        'prettytable',
         'argparse>=1.2.1',
         'requests>=1.1.0',
         'BeautifulSoup>=3.2.1',

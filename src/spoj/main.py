@@ -1,6 +1,6 @@
 import logging, argparse, ConfigParser, cookielib
 
-from .commands import ProblemList, UserStatus, Authenticate
+from .commands import ProblemList, UserStatus, Authenticate, ProblemDesc
 from . import settings
 
 
@@ -25,6 +25,7 @@ def _getOptionsParser():
     _commands = [
          Authenticate(),
          ProblemList(),
+         ProblemDesc(),
          UserStatus(),
          ]
 

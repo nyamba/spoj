@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import requests, getpass, cookielib, argparse, pydoc
+import requests, getpass, cookielib, argparse
 from BeautifulSoup import BeautifulSoup
 from prettytable import PrettyTable
 from requests.cookies import RequestsCookieJar
 from . import settings
 from .settings import _url
-from .utils import unescape as _, text_table
+from .utils import unescape as _, text_table, pager
 
 
 class Command(object):
@@ -97,15 +97,10 @@ class Command(object):
     def post(self, url, data=None, **kwargs):
         return self.requests.post(url, data, **kwargs)
 
-
-class ProblemList(Command):
-
-    def __init__(self):
-        super(ProblemList, self).__init__('problems',
-                'problem list')
-
-    def do(self, args):
-        print args
+    def get_soup(self, url, **kwargs):
+        r = self.get(url, **kwargs)
+        soup = BeautifulSoup(r.text)
+        return r, soup
 
 
 class Authenticate(Command):
@@ -165,12 +160,11 @@ class ProblemList(Command):
         if args.sort:
             arguments.append('sort=%d' % args.sort)
         if args.page:
-            arguments.append('page=%d' % args.page)
+            arguments.append('start=%d' % args.page)
 
         url = _url('problems/main') + ','.join(arguments)
 
-        r = self.get(url)
-        soup = BeautifulSoup(r.text)
+        __, soup = self.get_soup(url)
         t = PrettyTable(['Solution id(5)', 'Problem name(1)',
             'Problem id(1)', 'Candidates(6)', 'Success(7)'])
         t.align["Problem name(1)"] = 'l'
@@ -178,7 +172,7 @@ class ProblemList(Command):
 
         table = soup.find('table',{'class': 'problems'})
         t = text_table(table, t, 1)
-        pydoc.pager(t.get_string().encode('utf-8'))
+        pager(t.get_string())
 
     def add_arguments(self, parser):
         choices, cc = [], [1, 2, 5, 6, 7]
@@ -196,3 +190,28 @@ class ProblemList(Command):
                     6 - users count who solved it,
                     7 - percentage of valid solutions
                 ''')
+
+
+class ProblemDesc(Command):
+    def __init__(self):
+        super(ProblemDesc, self).__init__('desc',
+                'describe a problem')
+
+    def add_arguments(self, parser):
+        parser.add_argument('problem_id')
+
+    def doing(self, args):
+        __, soup = self.get_soup(_url('problems/'+args.problem_id))
+
+        title = '%s <%s>' % (_(soup.findAll('h1')[1].text), args.problem_id)
+        pp = soup.findAll('p')
+        desc = _(pp[1].text)
+        inp = _(pp[2].text)
+        out = _(pp[3].text)
+        idx = out.find('ExampleInput:')
+        if idx:
+            out = out[:idx]
+
+        desc = '\n** %s **\n\n %s \n\ninput:\n%s\nout:\n%s' % (title, desc, inp, out)
+
+        pager(desc)

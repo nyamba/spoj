@@ -1,4 +1,4 @@
-import htmlentitydefs, re
+import htmlentitydefs, re, pydoc
 
 
 def unescape(text):
@@ -32,3 +32,6 @@ def text_table(soup_table, table_printer, skip_row=0):
         t.add_row([unescape(c.text) for c in cells])
 
     return t
+
+def pager(text):
+    pydoc.pager(text.encode('utf-8'))
