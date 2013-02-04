@@ -1,5 +1,5 @@
-Монгол spoj
-===========
+CLI for SPOJ
+============
 
 www.spoj.com/ABRAMOV/ (Sphere online judge) -д зориулсан CL хэрэгсэл.
 
