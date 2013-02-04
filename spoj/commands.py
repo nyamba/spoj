@@ -25,17 +25,19 @@ def login():
     print "Welcome!"
 
 
-# @login_required
-# def problem():
-#     pass
+'''
+@login_required
+def problem():
+    pass
 
 
-# @login_required
-# def submit():
-#     pass
+@login_required
+def submit():
+    pass
 
 
-# `logout` command
-# def logout():
-#     # get request to http://www.spoj.com/logout
-#     pass
+`logout` command
+def logout():
+    # get request to http://www.spoj.com/logout
+    pass
+'''
