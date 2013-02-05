@@ -33,5 +33,6 @@ def text_table(soup_table, table_printer, skip_row=0):
 
     return t
 
+
 def pager(text):
     pydoc.pager(text.encode('utf-8'))

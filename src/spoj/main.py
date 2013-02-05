@@ -1,7 +1,9 @@
-import logging, argparse, ConfigParser, cookielib
+import logging, argparse, ConfigParser, cookielib, os, pkgutil, inspect
+import importlib
 
-from .commands import ProblemList, UserStatus, Authenticate, ProblemDesc
 from . import settings
+from . import commands
+from .commands import Command
 
 
 def parseConfig():
@@ -22,13 +24,9 @@ def parseConfig():
 
 
 def _getOptionsParser():
-    _commands = [
-         Authenticate(),
-         ProblemList(),
-         ProblemDesc(),
-         UserStatus(),
-         ]
+    command_classes = find_cmd_classes(commands)
 
+    _commands = [CC() for CC in command_classes]
     parser = argparse.ArgumentParser(prog='spoj', description='command line \
     tool for spoj.com')
     sub_parsers = parser.add_subparsers()
@@ -40,6 +38,23 @@ def _getOptionsParser():
         _parser.set_defaults(func=c.do)
 
     return parser
+
+
+def find_cmd_classes(pkg):
+    path = os.path.dirname(pkg.__file__)
+    pkgs = [name for _, name, _ in\
+        pkgutil.iter_modules([path])]
+    cmd = []
+
+    for p in pkgs:
+        p_name = '.'.join([pkg.__name__, p])
+        ppg = importlib.import_module(p_name)
+        classes = inspect.getmembers(ppg, inspect.isclass)
+        for n, c in classes:
+            if Command in c.__bases__:
+                cmd.append(c)
+
+    return cmd
 
 
 def runner():
