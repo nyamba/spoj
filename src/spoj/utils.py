@@ -23,13 +23,18 @@ def unescape(text):
     return re.sub("&#?\w+;", fixup, text)
 
 
-def text_table(soup_table, table_printer, skip_row=0):
+def text_table(soup_table, table_printer, skip_row=0,
+        cell_formatter=lambda c: unescape(c.text)):
     t = table_printer
 
     rows = soup_table.findAll('tr')[skip_row:]
-    for r in rows:
-        cells = r.findAll('td')
-        t.add_row([unescape(c.text) for c in cells])
+    for r in xrange(len(rows)):
+        cells = rows[r].findAll('td')
+        row = []
+        for c in xrange(len(cells)):
+            row.append(cell_formatter(r, c, cells[c]))
+
+        t.add_row(row)
 
     return t
 

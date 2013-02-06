@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+from prettytable import PrettyTable
 from . import Command
 from . import settings
 from ..settings import _url
-from ..utils import unescape as _
+from ..utils import unescape as _, text_table, pager
 
 
 class ProblemList(Command):
@@ -20,17 +21,32 @@ class ProblemList(Command):
         url = _url('problems/main') + ','.join(arguments)
 
         __, soup = self.get_soup(url)
-        t = PrettyTable(['Solution id(5)', 'Problem name(1)',
-            'Problem id(1)', 'Candidates(6)', 'Success(7)'])
+        headers = []
+        headers.append('Solution id(5)')
+        if self.is_authenticated():
+            headers.append('Solved(4)')
+        headers.append('Problem name(1)')
+        headers.append('Problem id(2)')
+        headers.append('Users(6)')
+        headers.append('Success(7)')
+
+        total_col = len(headers)
+        def cell_formatter(r, c, data_soup):
+            if total_col > 5 and c == 1:
+                return '*' if data_soup.find('img') else ''
+            else:
+                return _(data_soup.text)
+
+        t = PrettyTable(headers)
         t.align["Problem name(1)"] = 'l'
         t.padding_with = 1
 
-        table = soup.find('table',{'class': 'problems'})
-        t = text_table(table, t, 1)
+        table = soup.findAll('table',{'class': 'problems'})[-1]
+        t = text_table(table, t, 1, cell_formatter)
         pager(t.get_string())
 
     def add_arguments(self, parser):
-        choices, cc = [], [1, 2, 5, 6, 7]
+        choices, cc = [], [1, 2, 4, 5, 6, 7]
         for c in cc:
             choices.append(c)
             choices.append(-c)
