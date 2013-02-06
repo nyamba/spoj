@@ -3,6 +3,7 @@ import os
 SPOJ_URL = 'http://www.spoj.com/'
 LOGIN_URL = SPOJ_URL
 spoj_dirname = 'ABRAMOV'
+compiler_id = 'None'
 
 ROOM_URL = lambda : SPOJ_URL + spoj_dirname +'/'
 
