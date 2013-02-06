@@ -3,6 +3,7 @@ import requests, getpass, cookielib
 from BeautifulSoup import BeautifulSoup
 from requests.cookies import RequestsCookieJar
 from .. import settings
+from ..settings import _url
 
 
 class Command(object):
@@ -42,10 +43,12 @@ class Command(object):
 
     def is_authenticated(self):
         try:
-            assert self.requests.cookies['autologin_hash']
-            assert self.requests.cookies['autologin_login']
+            assert self.requests.cookies['autologin_hash'], 'hash'
+            assert self.requests.cookies['autologin_login'], 'login'
+            __, soup = self.get_soup(_url('myaccount'))
+            assert soup.find('h3'), 'h3'
             return True
-        except:
+        except AssertionError as e:
             return False
 
     def auth_if(self):
@@ -63,7 +66,8 @@ class Command(object):
 
     def authenticate(self):
         loop = True
-        print 'Authenticating user for ' + settings.SPOJ_URL
+        name = settings.user_name or 'user'
+        print 'Authenticating %s for %s' % (name, settings.SPOJ_URL)
 
         self.requests.cookies.clear()
 
