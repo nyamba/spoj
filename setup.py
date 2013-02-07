@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 
 name = 'spoj'
-version = '0.0.9'
+version = '0.0.14'
 
 
 def read(fname):
@@ -18,7 +18,7 @@ setup(
     description = ("command line tool for spoj.com "),
     license = "BSD",
     keywords = "spoj spoj.com algorithm",
-    url = "http://packages.python.org/spoj",
+    url = "http://github.com/nyamba/spoj",
     package_dir={'': 'src'},
     packages=find_packages('src'),
     include_package_data=True,

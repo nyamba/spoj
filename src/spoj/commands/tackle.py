@@ -56,11 +56,18 @@ class TackleProblem(Command):
                     'submit': 'submit',
                     },
                 files=files)
-        print 'waiting result for %d seconds!' % self.wait_time
-        time.sleep(self.wait_time)
-        print '\n **result** \n'
-        print 'date: %s\nname: %s\nstatus: %s\ntime: %s\nmemory: %s' %\
-                self.get_result(problem_id)
+        loop = True
+        while loop:
+            print 'waiting result for %d seconds!' % self.wait_time
+            time.sleep(self.wait_time)
+            print '\n **result** \n'
+            result = self.get_result(problem_id)
+            print 'date: %s\nname: %s\nstatus: %s\ntime: %s\nmemory: %s' %\
+                    result
+            if u'байна' not in result[2]:
+                loop = False
+            else:
+                print 'fetching result again, ',
 
 
     def get_compiler(self, file_name):

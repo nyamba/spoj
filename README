@@ -1,7 +1,8 @@
 Монгол spoj
 ===========
 
-www.spoj.com/ABRAMOV/ (Sphere online judge) -д зориулсан CL хэрэгсэл.
+www.spoj.com/ABRAMOV/ (Sphere online judge) -д зориулсан CL хэрэгсэл. Мөн
+[Мөнхбаатар](http://itblog.gmb.mn) анддаа бариж буй цагаан сарын бэлэг :)
 
 Боломжууд:
 - системд нэвтрэх
@@ -27,7 +28,8 @@ www.spoj.com/ABRAMOV/ (Sphere online judge) -д зориулсан CL хэрэг
 Системд нэвтрэх
 ---------------
 
-`login` коммандаар системд нэвтрэн орно.
+`login` коммандаар системд нэвтрэн орно. Үүний тулд http://spoj.com дээр
+бүртгүүлсэн байх шаардлагатай.
 Жишээ:
 	
 	>spoj login <username>
