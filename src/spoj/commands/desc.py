@@ -11,6 +11,10 @@ class ProblemDesc(Command):
 
     def add_arguments(self, parser):
         parser.add_argument('problem_id')
+        parser.add_argument('--input', action='store_true',
+                help='only give example input')
+        parser.add_argument('--output', action='store_true',
+                help='only give example outpu')
 
     def doing(self, args):
         __, soup = self.get_soup(_url('problems/'+args.problem_id))
@@ -18,12 +22,29 @@ class ProblemDesc(Command):
         title = '%s <%s>' % (_(soup.findAll('h1')[1].text), args.problem_id)
         pp = soup.findAll('p')
         desc = _(pp[1].text)
+        if desc.endswith('Input'):
+            desc = desc[:-5]
         inp = _(pp[2].text)
+        if inp.endswith('Output'):
+            inp = inp[:-6]
         out = _(pp[3].text)
         idx = out.find('ExampleInput:')
         if idx:
             out = out[:idx]
 
-        desc = '\n** %s **\n\n %s \n\ninput:\n%s\nout:\n%s' % (title, desc, inp, out)
+        example = _(soup.find('pre').text)
+        idx = example.find('Output:')
+        _in = example[6:idx]
+        _out = example[idx+7:]
 
-        pager(desc)
+        content = '\n** %s **\n%s\n\n'
+        content += 'input:\n%s\n---------------\n%s\n\n'
+        content += 'output:\n%s\n---------------\n%s'
+        content = content % (title, desc, inp, _in, out, _out)
+
+        if args.input:
+            content = _in
+        if args.output:
+            content =  _out
+
+        pager(content)
