@@ -14,7 +14,7 @@ class ProblemDesc(Command):
         parser.add_argument('--input', action='store_true',
                 help='only give example input')
         parser.add_argument('--output', action='store_true',
-                help='only give example outpu')
+                help='only give example output')
 
     def doing(self, args):
         __, soup = self.get_soup(_url('problems/'+args.problem_id))
