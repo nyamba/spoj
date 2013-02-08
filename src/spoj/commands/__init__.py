@@ -48,7 +48,7 @@ class Command(object):
             __, soup = self.get_soup(_url('myaccount'))
             assert soup.find('h3'), 'h3'
             return True
-        except AssertionError as e:
+        except:
             return False
 
     def auth_if(self):
