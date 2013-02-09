@@ -41,3 +41,31 @@ def text_table(soup_table, table_printer, skip_row=0,
 
 def pager(text):
     pydoc.pager(text.encode('utf-8'))
+
+
+def escape_sub(html):
+    '''
+    >>> escape_sub('<b>test</b> help x<sup>2+1</sup>')
+    '<b>test</b> help x^(2+1)'
+    >>> escape_sub('<b>test</b> help x<sub>2+1</sub>')
+    '<b>test</b> help x[2+1]'
+    >>> escape_sub('<b>test</b> help x<sup>2</sup>')
+    '<b>test</b> help x^2'
+    >>> escape_sub('a=y+x/(y<sup>2</sup>+|x<sup>2</sup>/(y+x<sup>3</sup>/3)|)')
+    'a=y+x/(y^2+|x^2/(y+x^3/3)|)'
+    '''
+
+    def fix_sup(match_obj):
+        cc = match_obj.group('cc')
+        if len(cc) > 1:
+            return '^(%s)' % cc
+        else:
+            return '^' + cc
+
+    def fix_sub(match_obj):
+        return '[%s]' % match_obj.group('cc')
+
+    html = re.sub(r'\<sub\>(?P<cc>[a-z0-9*+/-_]*)\<\/sub\>', fix_sub, html, flags=re.I)
+    html = re.sub(r'\<sup\>(?P<cc>[a-z0-9*+/-_]*)\<\/sup\>', fix_sup, html, flags=re.I)
+
+    return html

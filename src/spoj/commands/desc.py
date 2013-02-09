@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+from BeautifulSoup import BeautifulSoup
 from . import Command
 from ..settings import _url
-from ..utils import unescape as _, pager
+from ..utils import unescape as _, pager, escape_sub
 
 
 class ProblemDesc(Command):
@@ -21,7 +22,7 @@ class ProblemDesc(Command):
 
         title = '%s <%s>' % (_(soup.findAll('h1')[1].text), args.problem_id)
         pp = soup.findAll('p')
-        desc = _(pp[1].text)
+        desc = BeautifulSoup(escape_sub(_(str(pp[1])))).text
         if desc.endswith('Input'):
             desc = desc[:-5]
         inp = _(pp[2].text)
