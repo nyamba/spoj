@@ -15,3 +15,11 @@ user_name = None
 cj = None
 
 _url = lambda path: ROOM_URL() + path + '/'
+
+def get_user_name():
+    global user_name
+    if user_name:
+        return user_name
+
+    user_name = raw_input('user name:')
+    return user_name

@@ -99,7 +99,7 @@ class TackleProblem(Command):
         '''
         return last result of the problem
         '''
-        url = _url('status/%s,%s' % (problem_id, settings.user_name))
+        url = _url('status/%s,%s' % (problem_id, settings.get_user_name()))
         __, soup = self.get_soup(url)
         #display_in_browser(__.text)
         rows = soup.findAll('table', {'class': 'problems'})[1].\
