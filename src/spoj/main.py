@@ -9,9 +9,10 @@ from .commands import Command
 def parseConfig():
     cfg = ConfigParser.ConfigParser()
     cfg.read([settings.CONFIG_FILE_NAME])
-    for (k, v) in cfg.items('user'):
-        logging.info('loaded config: %s=%s' % (k, v))
-        setattr(settings, k, v)
+    if cfg.has_section('user'):
+        for (k, v) in cfg.items('user'):
+            logging.info('loaded config: %s=%s' % (k, v))
+            setattr(settings, k, v)
 
     try:
         cj = cookielib.MozillaCookieJar(settings.COOKIE_FILE_NAME)
