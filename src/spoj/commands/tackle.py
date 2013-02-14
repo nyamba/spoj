@@ -3,7 +3,7 @@ import sys, time
 from . import Command
 from . import settings
 from ..settings import _url
-from ..utils import unescape as _
+from ..utils import unescape as _, display_in_browser
 
 
 LANG_COMP = {
@@ -101,6 +101,7 @@ class TackleProblem(Command):
         '''
         url = _url('status/%s,%s' % (problem_id, settings.user_name))
         __, soup = self.get_soup(url)
+        #display_in_browser(__.text)
         rows = soup.findAll('table', {'class': 'problems'})[1].\
                 findAll('tr')[1].findAll('td')
         date = rows[2].text

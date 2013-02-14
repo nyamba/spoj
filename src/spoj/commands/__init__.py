@@ -88,6 +88,8 @@ class Command(object):
             r = self.post(settings.LOGIN_URL, data=payload)
             if self.is_authenticated():
                 print 'Welcome %s to %s' % (name, settings.SPOJ_URL)
+                settings.user_name = name
+                self.save_cookies()
                 loop = False
             else:
                 print 'incorrect user name or password! Try again.'

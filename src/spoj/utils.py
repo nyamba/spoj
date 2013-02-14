@@ -1,4 +1,4 @@
-import htmlentitydefs, re, pydoc
+import htmlentitydefs, re, pydoc, webbrowser, tempfile
 
 
 def unescape(text):
@@ -69,3 +69,12 @@ def escape_sub(html):
     html = re.sub(r'\<sup\>(?P<cc>[a-z0-9*+/-_]*)\<\/sup\>', fix_sup, html, flags=re.I)
 
     return html
+
+
+def display_in_browser(html):
+    _, fname= tempfile.mkstemp()
+    fname = fname
+    f = open(fname, 'w')
+    f.write(html)
+    f.close()
+    webbrowser.open('file://'+fname)
