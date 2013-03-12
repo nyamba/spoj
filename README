@@ -22,9 +22,9 @@ www.spoj.com/ABRAMOV/ (Sphere online judge) -д зориулсан CL хэрэг
 `~/.spojrc` дотор дараах өгөгдлүүдийг урьдчилан тохируулах боломжтой.
 
     [user]
-    user_name='your_user_name'
+    user_name=your_user_name
     compiler_id=4
-    spoj_dirname='ABRAMOV'
+    spoj_dirname=ABRAMOV
 
 
 Хэрхэн суулгах
