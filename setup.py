@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 
 name = 'spoj'
-version = '0.0.14'
+version = '0.0.20'
 
 
 def read(fname):
