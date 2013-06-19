@@ -33,7 +33,7 @@ www.spoj.com/ABRAMOV/ (Sphere online judge) -д зориулсан CL хэрэг
 `pip` ашиглан хялбархан суулгаж болно. Хэрвээ таны үйлдлийн систем дээр `pip` суугаагүй
 бол дараах коммандаар суулгаарай.
 
-    >sudo apt-get install pip
+    >sudo apt-get install python-pip
     >sudo pip install spoj
 
 
